@@ -8,12 +8,11 @@
         :root { --primary: #7c3aed; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .container { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid #334155; text-align: center; }
-        h1 { color: #a78bfa; font-size: 1.6rem; margin-bottom: 20px; }
-        label { display: block; text-align: left; margin: 10px 0 5px; font-size: 0.8rem; color: #94a3b8; font-weight: bold; }
-        select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 10px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        button:hover { background: #6d28d9; }
-        .info-finde { background: #334155; padding: 10px; border-radius: 8px; font-size: 0.8rem; margin-top: 15px; border-left: 4px solid #fbbf24; text-align: left; }
+        h1 { color: #a78bfa; font-size: 1.6rem; margin-bottom: 20px; text-transform: uppercase; }
+        label { display: block; text-align: left; margin: 15px 0 5px; font-size: 0.8rem; color: #94a3b8; font-weight: bold; }
+        select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 5px; box-sizing: border-box; font-size: 1rem; }
+        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .info-finde { background: #1e293b; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 20px; border: 1px dashed #fbbf24; text-align: left; color: #fbbf24; }
     </style>
 </head>
 <body>
@@ -30,7 +29,7 @@
     </select>
 
     <label>2. ELIGE EL DÍA</label>
-    <select id="dia" onchange="cambioDia()">
+    <select id="dia" onchange="actualizarHoras()">
         <option value="">-- Selecciona un día --</option>
         <option value="Lunes">Lunes</option>
         <option value="Martes">Martes</option>
@@ -40,7 +39,7 @@
 
     <label>3. ELIGE LA HORA (ESP)</label>
     <select id="hora" disabled>
-        <option value="">-- Selecciona el día primero --</option>
+        <option value="">-- Primero elige día --</option>
     </select>
 
     <label>4. TU DISCORD</label>
@@ -49,14 +48,63 @@
     <button onclick="enviar()">RESERVAR AHORA</button>
 
     <div class="info-finde">
-        <b>📅 ¿Quieres fin de semana?</b><br>
-        Los findes no tienen horario fijo. Elige cualquier día y dime en Discord: <i>"Quiero hacerlo el sábado/domingo"</i> y lo cuadramos.
+        <b>📅 ¿Fines de semana?</b><br>
+        No tienen horario fijo. Elige cualquier día y lo cuadramos por Discord personalmente.
     </div>
 </div>
 
 <script>
-    const horarios = {
-        "Lunes": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
-        "Miércoles": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
-        "Martes": ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "19:50"],
-        "Jueves": ["17:00",
+    function actualizarHoras() {
+        const dia = document.getElementById('dia').value;
+        const horaSelect = document.getElementById('hora');
+        
+        const horarios = {
+            "Lunes": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
+            "Miércoles": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
+            "Martes": ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "19:50"],
+            "Jueves": ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "19:50"]
+        };
+
+        if (dia === "") {
+            horaSelect.disabled = true;
+            horaSelect.innerHTML = '<option value="">-- Primero elige día --</option>';
+        } else {
+            horaSelect.disabled = false;
+            let opciones = "";
+            horarios[dia].forEach(h => {
+                opciones += `<option value="${h}">${h}</option>`;
+            });
+            horaSelect.innerHTML = opciones;
+        }
+    }
+
+    async function enviar() {
+        const webhook = "https://discord.com/api/webhooks/1487025287886540940/8nFZeXY_Hmr3Qq1T2XWEw053LHzXIB2HTI__EdJDsdoIFXg_f63-5o8j86JaIREbDJ5Q";
+        const plan = document.getElementById('plan').value;
+        const dia = document.getElementById('dia').value;
+        const hora = document.getElementById('hora').value;
+        const user = document.getElementById('discord_user').value;
+
+        if(!dia || !hora || !user) {
+            alert("Rellena todos los campos");
+            return;
+        }
+
+        const data = {
+            content: `🚀 **NUEVA RESERVA**\n👤 **Usuario:** ${user}\n🎯 **Plan:** ${plan}\n📅 **Cita:** ${dia} a las ${hora} (ESP)`
+        };
+
+        try {
+            await fetch(webhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            alert("¡Enviado! Te hablo por Discord.");
+        } catch (e) {
+            alert("Error al enviar.");
+        }
+    }
+</script>
+</body>
+</html>
