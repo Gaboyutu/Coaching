@@ -7,49 +7,65 @@
     <style>
         :root { --primary: #7c3aed; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
         body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid #334155; text-align: center; }
+        .container { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid #334155; text-align: center; position: relative; }
         h1 { color: #a78bfa; font-size: 1.6rem; margin-bottom: 20px; text-transform: uppercase; }
         label { display: block; text-align: left; margin: 15px 0 5px; font-size: 0.8rem; color: #94a3b8; font-weight: bold; }
-        select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 5px; box-sizing: border-box; font-size: 1rem; }
+        select, input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 5px; box-sizing: border-box; font-size: 1rem; font-family: inherit; }
+        textarea { height: 80px; resize: none; }
         button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        button:hover { background: #6d28d9; }
+        .hidden { display: none; }
         .info-finde { background: #1e293b; padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-top: 20px; border: 1px dashed #fbbf24; text-align: left; color: #fbbf24; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>RESERVA TU CLASE 🎯</h1>
-    
-    <label>1. ELIGE TU PLAN</label>
-    <select id="plan">
-        <option value="Clase Gratis (10min)">🎁 CLASE GRATIS (10 Min)</option>
-        <option value="Teoría (2€)">📚 SOLO TEORÍA - 2€</option>
-        <option value="Live Coaching (5€)">🎮 LIVE COACHING - 5€</option>
-        <option value="Pack Pro (8,50€)">🔥 PACK PRO - 8,50€</option>
-    </select>
+    <div id="paso1">
+        <h1>RESERVA TU CLASE 🎯</h1>
+        
+        <label>1. ELIGE TU PLAN</label>
+        <select id="plan">
+            <option value="Clase Gratis (10min)">🎁 CLASE GRATIS (10 Min)</option>
+            <option value="Teoría (2€)">📚 SOLO TEORÍA - 2€</option>
+            <option value="Live Coaching (5€)">🎮 LIVE COACHING - 5€</option>
+            <option value="Pack Pro (8,50€)">🔥 PACK PRO - 8,50€</option>
+        </select>
 
-    <label>2. ELIGE EL DÍA</label>
-    <select id="dia" onchange="actualizarHoras()">
-        <option value="">-- Selecciona un día --</option>
-        <option value="Lunes">Lunes</option>
-        <option value="Martes">Martes</option>
-        <option value="Miércoles">Miércoles</option>
-        <option value="Jueves">Jueves</option>
-    </select>
+        <label>2. ELIGE EL DÍA</label>
+        <select id="dia" onchange="actualizarHoras()">
+            <option value="">-- Selecciona un día --</option>
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miércoles">Miércoles</option>
+            <option value="Jueves">Jueves</option>
+        </select>
 
-    <label>3. ELIGE LA HORA (ESP)</label>
-    <select id="hora" disabled>
-        <option value="">-- Primero elige día --</option>
-    </select>
+        <label>3. ELIGE LA HORA (ESP)</label>
+        <select id="hora" disabled>
+            <option value="">-- Primero elige día --</option>
+        </select>
 
-    <label>4. TU DISCORD</label>
-    <input type="text" id="discord_user" placeholder="Ej: gabo#1234">
+        <label>4. TU DISCORD</label>
+        <input type="text" id="discord_user" placeholder="Ej: gabo#1234">
 
-    <button onclick="enviar()">RESERVAR AHORA</button>
+        <button onclick="irAPaso2()">CONTINUAR</button>
 
-    <div class="info-finde">
-        <b>📅 ¿Fines de semana?</b><br>
-        No tienen horario fijo. Elige cualquier día y lo cuadramos por Discord personalmente.
+        <div class="info-finde">
+            <b>📅 ¿Fines de semana?</b><br>
+            Lo cuadramos por Discord personalmente.
+        </div>
+    </div>
+
+    <div id="paso2" class="hidden">
+        <h1>ÚLTIMO PASO 🚀</h1>
+        <p style="font-size: 0.9rem; color: #94a3b8;">Ayúdame a mejorar:</p>
+        
+        <label>¿POR DÓNDE ME HAS CONOCIDO?</label>
+        <textarea id="publicidad" placeholder="Ej: TikTok, un amigo, por un clip de YouTube..."></textarea>
+
+        <button onclick="enviar()">CONFIRMAR RESERVA</button>
+        <button onclick="volverAPaso1()" style="background: transparent; border: 1px solid #475569; margin-top: 10px;">VOLVER</button>
     </div>
 </div>
 
@@ -57,25 +73,35 @@
     function actualizarHoras() {
         const dia = document.getElementById('dia').value;
         const horaSelect = document.getElementById('hora');
-        
         const horarios = {
             "Lunes": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
             "Miércoles": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
             "Martes": ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "19:50"],
             "Jueves": ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "19:50"]
         };
-
         if (dia === "") {
             horaSelect.disabled = true;
             horaSelect.innerHTML = '<option value="">-- Primero elige día --</option>';
         } else {
             horaSelect.disabled = false;
             let opciones = "";
-            horarios[dia].forEach(h => {
-                opciones += `<option value="${h}">${h}</option>`;
-            });
+            horarios[dia].forEach(h => { opciones += `<option value="${h}">${h}</option>`; });
             horaSelect.innerHTML = opciones;
         }
+    }
+
+    function irAPaso2() {
+        if(!document.getElementById('dia').value || !document.getElementById('hora').value || !document.getElementById('discord_user').value) {
+            alert("Rellena todos los campos");
+            return;
+        }
+        document.getElementById('paso1').classList.add('hidden');
+        document.getElementById('paso2').classList.remove('hidden');
+    }
+
+    function volverAPaso1() {
+        document.getElementById('paso2').classList.add('hidden');
+        document.getElementById('paso1').classList.remove('hidden');
     }
 
     async function enviar() {
@@ -84,27 +110,13 @@
         const dia = document.getElementById('dia').value;
         const hora = document.getElementById('hora').value;
         const user = document.getElementById('discord_user').value;
-
-        if(!dia || !hora || !user) {
-            alert("Rellena todos los campos");
-            return;
-        }
+        const pub = document.getElementById('publicidad').value || "No especificado";
 
         const data = {
-            content: `🚀 **NUEVA RESERVA**\n👤 **Usuario:** ${user}\n🎯 **Plan:** ${plan}\n📅 **Cita:** ${dia} a las ${hora} (ESP)`
+            content: `🚀 **NUEVA RESERVA**\n👤 **Usuario:** ${user}\n🎯 **Plan:** ${plan}\n📅 **Cita:** ${dia} a las ${hora}\n📣 **Viene de:** ${pub}`
         };
 
         try {
             await fetch(webhook, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            alert("¡Enviado! Te hablo por Discord.");
-        } catch (e) {
-            alert("Error al enviar.");
-        }
-    }
-</script>
-</body>
-</html>
+                headers: { '
