@@ -3,134 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortnite Coaching | Reserva tu Sesión</title>
+    <title>Fortnite Coaching | Reserva</title>
     <style>
         :root { --primary: #7c3aed; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .container { background: var(--card); padding: 40px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 100%; max-width: 450px; border: 1px solid #334155; text-align: center; }
-        h1 { color: #a78bfa; margin-bottom: 10px; font-size: 1.8rem; }
-        p { opacity: 0.8; margin-bottom: 25px; font-size: 0.9rem; }
-        label { display: block; text-align: left; margin-bottom: 8px; font-weight: bold; font-size: 0.85rem; color: #94a3b8; margin-top: 15px; }
-        select, input { width: 100%; padding: 12px; margin-bottom: 5px; border-radius: 10px; border: 1px solid #475569; background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
-        select:disabled { opacity: 0.5; cursor: not-allowed; }
-        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); margin-top: 25px; }
-        button:hover { background: #6d28d9; transform: translateY(-2px); }
-        .success-msg { color: #10b981; font-weight: bold; margin-top: 15px; display: none; }
-        .weekend-note { font-size: 0.8rem; opacity: 0.6; margin-top: 10px; text-align: left; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid #334155; text-align: center; }
+        h1 { color: #a78bfa; font-size: 1.6rem; margin-bottom: 20px; }
+        label { display: block; text-align: left; margin: 10px 0 5px; font-size: 0.8rem; color: #94a3b8; font-weight: bold; }
+        select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #6d28d9; }
+        .info-finde { background: #334155; padding: 10px; border-radius: 8px; font-size: 0.8rem; margin-top: 15px; border-left: 4px solid #fbbf24; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Reserva tu Clase 🧠</h1>
-        <p>Sube a Unreal con mejores decisiones. Elige tu plan, día y hora, y te contacto por Discord.</p>
-        
-        <label for="plan">SELECCIONA TU PLAN</label>
-        <select id="plan">
-            <option value="Clase Gratis (10min)">🎁 Clase de Prueba (10 Min) - GRATIS</option>
-            <option value="Teoría (2€)">📚 Solo Teoría - 2€</option>
-            <option value="Live Coaching (5€)">🎮 Live Coaching - 5€</option>
-            <option value="Pack Pro (8,50€)">🔥 Pack Pro (Teoría + Live) - 8,50€</option>
-        </select>
+<div class="container">
+    <h1>RESERVA TU CLASE 🎯</h1>
+    
+    <label>1. ELIGE TU PLAN</label>
+    <select id="plan">
+        <option value="Clase Gratis (10min)">🎁 CLASE GRATIS (10 Min)</option>
+        <option value="Teoría (2€)">📚 SOLO TEORÍA - 2€</option>
+        <option value="Live Coaching (5€)">🎮 LIVE COACHING - 5€</option>
+        <option value="Pack Pro (8,50€)">🔥 PACK PRO - 8,50€</option>
+    </select>
 
-        <label for="dia">DÍA DE LA SEMANA</label>
-        <select id="dia" onchange="actualizarHoras()">
-            <option value="">-- Elige un día --</option>
-            <option value="Lunes">Lunes</option>
-            <option value="Martes">Martes</option>
-            <option value="Miércoles">Miércoles</option>
-            <option value="Jueves">Jueves</option>
-        </select>
+    <label>2. ELIGE EL DÍA</label>
+    <select id="dia" onchange="cambioDia()">
+        <option value="">-- Selecciona un día --</option>
+        <option value="Lunes">Lunes</option>
+        <option value="Martes">Martes</option>
+        <option value="Miércoles">Miércoles</option>
+        <option value="Jueves">Jueves</option>
+    </select>
 
-        <label for="hora">HORA DISPONIBLE (ESPAÑA)</label>
-        <select id="hora" disabled>
-            <option value="">-- Primero elige día --</option>
-        </select>
+    <label>3. ELIGE LA HORA (ESP)</label>
+    <select id="hora" disabled>
+        <option value="">-- Selecciona el día primero --</option>
+    </select>
 
-        <label for="discord_user">TU USUARIO DE DISCORD</label>
-        <input type="text" id="discord_user" placeholder="Ejemplo: peterbot_fan#0000" required>
+    <label>4. TU DISCORD</label>
+    <input type="text" id="discord_user" placeholder="Ej: gabo#1234">
 
-        <button onclick="enviarPedido()">RESERVAR SESIÓN</button>
-        <div id="success" class="success-msg">¡Pedido enviado! Revisa tu Discord pronto.</div>
-        <p class="weekend-note">* Para fines de semana, contacta directamente por Discord.</p>
+    <button onclick="enviar()">RESERVAR AHORA</button>
+
+    <div class="info-finde">
+        <b>📅 ¿Quieres fin de semana?</b><br>
+        Los findes no tienen horario fijo. Elige cualquier día y dime en Discord: <i>"Quiero hacerlo el sábado/domingo"</i> y lo cuadramos.
     </div>
+</div>
 
-    <script>
-        // Configuración de tus horas ideales
-        const horas_lun_mie = ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"];
-        const horas_mar_jue = ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "19:50"];
-
-        function actualizarHoras() {
-            const diaSelect = document.getElementById('dia');
-            const horaSelect = document.getElementById('hora');
-            const diaElegido = diaSelect.value;
-
-            // Limpiar horas anteriores
-            horaSelect.innerHTML = '<option value="">-- Elige hora --</option>';
-            horaSelect.disabled = true;
-
-            if (diaElegido === "") return;
-
-            let horasDisponibles = [];
-            if (diaElegido === "Lunes" || diaElegido === "Miércoles") {
-                horasDisponibles = horas_lun_mie;
-            } else if (diaElegido === "Martes" || diaElegido === "Jueves") {
-                horasDisponibles = horas_mar_jue;
-            }
-
-            // Añadir las horas al selector
-            horasDisponibles.forEach(hora => {
-                const option = document.createElement('option');
-                option.value = hora;
-                option.textContent = hora;
-                horaSelect.appendChild(option);
-            });
-
-            horaSelect.disabled = false;
-        }
-
-        function enviarPedido() {
-            // TU WEBHOOK REAL (Se mantiene el que me pasaste)
-            const webhookURL = "https://discord.com/api/webhooks/1487025287886540940/8nFZeXY_Hmr3Qq1T2XWEw053LHzXIB2HTI__EdJDsdoIFXg_f63-5o8j86JaIREbDJ5Q";
-            
-            const plan = document.getElementById('plan').value;
-            const dia = document.getElementById('dia').value;
-            const hora = document.getElementById('hora').value;
-            const user = document.getElementById('discord_user').value;
-
-            if(!dia || !hora || !user) {
-                alert("Por favor, rellena todos los campos (Día, Hora y Discord).");
-                return;
-            }
-
-            // Formato del mensaje que llega a tu Discord
-            const payload = {
-                username: "Sistema de Reservas",
-                avatar_url: "https://i.imgur.com/4M34pZp.png",
-                embeds: [{
-                    title: "🚀 ¡NUEVA RESERVA DE COACHING!",
-                    color: 8111359,
-                    fields: [
-                        { name: "Plan seleccionado", value: "
-http://googleusercontent.com/immersive_entry_chip/0
-http://googleusercontent.com/immersive_entry_chip/1
-http://googleusercontent.com/immersive_entry_chip/2
-
-### ¿Qué tienes que hacer ahora?
-
-1.  Ve a tu archivo `index.html` en **GitHub**.
-2.  Dale al botón del **lápiz** para editar.
-3.  Borra absolutamente **todo** el código viejo.
-4.  Pega este nuevo código completo.
-5.  Dale al botón verde de **"Commit changes..."** (y confirma otra vez en la ventanita).
-
-### Cómo probarlo (para ver si eres un crack):
-
-1.  Entra en tu web (la que termina en `.github.io/Coaching/`).
-2.  Elige el plan **"🎁 Clase de Prueba (10 Min) - GRATIS"**.
-3.  Elige **Lunes**. Verás que en las horas sale "17:20", "17:50", etc.
-4.  Cambia a **Martes**. Verás que las horas cambian a "17:00", "17:30", etc.
-5.  Pon un nombre de Discord y dale a **RESERVAR SESIÓN**.
-6.  Mira tu servidor de Discord.
-
-**¿Te ha llegado la nueva tarjeta con todos los datos (Plan, Día, Hora y Discord)?**
+<script>
+    const horarios = {
+        "Lunes": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
+        "Miércoles": ["17:20", "17:50", "18:20", "18:50", "19:20", "19:50"],
+        "Martes": ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "19:50"],
+        "Jueves": ["17:00",
